@@ -20,7 +20,7 @@ import {
   getCountOfEventsAtEvent,
   getOrderOfEvent,
   getRelativeTopInDay,
-  hours,
+  getHours,
   isToday,
 } from '../utils/datetime'
 import { typedMemo } from '../utils/react'
@@ -58,6 +58,7 @@ interface CalendarBodyProps<T extends ICalendarEventBase> {
   headerComponent?: React.ReactElement | null
   headerComponentStyle?: ViewStyle
   hourStyle?: TextStyle
+  minuteStep?: number
   hideHours?: Boolean
   isEventOrderingEnabled?: boolean
   showWeekNumber?: boolean
@@ -95,6 +96,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
   enrichedEventsByDate,
   enableEnrichedEvents = false,
   eventsAreSorted = false,
+  minuteStep = 60,
 }: CalendarBodyProps<T>) {
   const scrollView = React.useRef<ScrollView>(null)
   const { now } = useNow(!hideNowIndicator)
@@ -262,11 +264,12 @@ function _CalendarBody<T extends ICalendarEventBase>({
         >
           {(!hideHours || showWeekNumber) && (
             <View style={[u['z-20'], u['w-50']]}>
-              {hours.map((hour) => (
+              {getHours(minuteStep).map((time) => (
                 <HourGuideColumn
-                  key={hour}
+                  key={time.hour + time.minute}
                   cellHeight={cellHeight}
-                  hour={hour}
+                  hour={time.hour}
+                  minute={time.minute}
                   ampm={ampm}
                   hourStyle={hourStyle}
                 />
@@ -276,12 +279,13 @@ function _CalendarBody<T extends ICalendarEventBase>({
 
           {dateRange.map((date) => (
             <View style={[u['flex-1'], u['overflow-hidden']]} key={date.toString()}>
-              {hours.map((hour, index) => (
+              {getHours(minuteStep).map((time, index) => (
                 <HourGuideCell
-                  key={hour}
+                  key={time.hour + time.minute}
                   cellHeight={cellHeight}
                   date={date}
-                  hour={hour}
+                  hour={time.hour}
+                  minute={time.minute}
                   onLongPress={_onLongPressCell}
                   onPress={_onPressCell}
                   index={index}

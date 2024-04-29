@@ -9,11 +9,18 @@ import { objHasContent } from '../utils/object'
 interface HourGuideColumnProps {
   cellHeight: number
   hour: number
+  minute: number
   ampm: boolean
   hourStyle: TextStyle
 }
 
-const _HourGuideColumn = ({ cellHeight, hour, ampm, hourStyle = {} }: HourGuideColumnProps) => {
+const _HourGuideColumn = ({
+  cellHeight,
+  hour,
+  minute,
+  ampm,
+  hourStyle = {},
+}: HourGuideColumnProps) => {
   const theme = useTheme()
   const textStyle = React.useMemo(
     () => ({ color: theme.palette.gray[500], fontSize: theme.typography.xs.fontSize }),
@@ -23,7 +30,13 @@ const _HourGuideColumn = ({ cellHeight, hour, ampm, hourStyle = {} }: HourGuideC
   return (
     <View style={{ height: cellHeight }}>
       <Text style={[objHasContent(hourStyle) ? hourStyle : textStyle, u['text-center']]}>
-        {formatHour(hour, ampm)}
+        {formatHour(
+          {
+            hour,
+            minute,
+          },
+          ampm,
+        )}
       </Text>
     </View>
   )

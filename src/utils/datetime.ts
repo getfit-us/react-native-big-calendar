@@ -61,24 +61,32 @@ export function getDatesInNextOneDay(
   return days
 }
 
-export const hours = [
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-]
+export function getHours(minuteStep = 60) {
+  const times = []
+  for (let i = 0; i < 24; i++) {
+    for (let j = 0; j < 60; j += minuteStep) {
+      times.push({ hour: i, minute: j })
+    }
+  }
+  return times
+}
 
-export function formatHour(hour: number, ampm = false) {
+export function formatHour(time: { hour: number; minute: number }, ampm = false) {
+  const { hour, minute } = time
+
   if (ampm) {
     if (hour === 0) {
-      return ''
+      return `12:${minute.toString().padStart(2, '0')} AM`
     }
     if (hour === 12) {
-      return `12 PM`
+      return `12:${minute.toString().padStart(2, '0')} PM`
     }
     if (hour > 12) {
-      return `${hour - 12} PM`
+      return `${hour - 12}:${minute.toString().padStart(2, '0')} PM`
     }
-    return `${hour} AM`
+    return `${hour}:${minute.toString().padStart(2, '0')} AM`
   }
-  return `${hour}:00`
+  return `${hour}:${minute.toString().padStart(2, '0')}`
 }
 
 export function isToday(date: dayjs.Dayjs) {

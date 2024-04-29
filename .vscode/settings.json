@@ -1,0 +1,10 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#0B3332",
+    "titleBar.activeBackground": "#0F4846",
+    "titleBar.activeForeground": "#F4FDFC"
+  },
+  "CodeGPT.apiKey": "Ollama",
+  "CodeGPT.Autocomplete.provider": "Ollama - llama3:70b-instruct",
+  "CodeGPT.Autocomplete.enabled": false
+}

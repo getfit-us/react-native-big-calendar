@@ -12,6 +12,7 @@ interface HourGuideCellProps {
   onPress: (d: dayjs.Dayjs) => void
   date: dayjs.Dayjs
   hour: number
+  minute: number
   index: number
   calendarCellStyle?: CalendarCellStyle
 }
@@ -21,7 +22,9 @@ const _HourGuideCell = ({
   onLongPress,
   onPress,
   date,
+
   hour,
+  minute,
   index,
   calendarCellStyle,
 }: HourGuideCellProps) => {
@@ -34,8 +37,8 @@ const _HourGuideCell = ({
 
   return (
     <TouchableWithoutFeedback
-      onLongPress={() => onLongPress(date.hour(hour).minute(0))}
-      onPress={() => onPress(date.hour(hour).minute(0))}
+      onLongPress={() => onLongPress(date.hour(hour).minute(minute))}
+      onPress={() => onPress(date.hour(hour).minute(minute))}
     >
       <View
         style={[

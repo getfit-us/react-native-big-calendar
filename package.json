@@ -13,6 +13,7 @@
     "storybook": "start-storybook -p 7007",
     "build-storybook": "build-storybook -o .storybook-build",
     "sync-rndemo": "yarn build && cp -r build rndemo",
+    "sync-scheduler": "yarn build && cp -r build /Users/chris/Development/scheduler.native/node_modules/react-native-big-calendar/",
     "test": "jest",
     "format": "prettier --write {src,stories}/**.{ts,tsx}",
     "lint": "eslint --ext ts,tsx src stories",

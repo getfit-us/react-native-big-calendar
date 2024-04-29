@@ -55,6 +55,11 @@ export interface CalendarContainerProps<T extends ICalendarEventBase> {
   hourRowHeight?: number
 
   /**
+   *Customize the cell step of the minutes in the calendar. Defaults to 60 minutes.
+   */
+  minuteStep?: number
+
+  /**
    * Adjusts the indentation of events that occur during the same time period. Defaults to 20 on web and 8 on mobile.
    */
   overlapOffset?: number
@@ -178,6 +183,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   headerComponent = null,
   headerComponentStyle = {},
   hourStyle = {},
+  minuteStep = 60,
   showAllDayEventCell = true,
   moreLabel = '{moreCount} More',
   showAdjacentMonths = true,
@@ -398,6 +404,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         headerComponent={headerComponent}
         headerComponentStyle={headerComponentStyle}
         hourStyle={hourStyle}
+        minuteStep={minuteStep}
         isEventOrderingEnabled={isEventOrderingEnabled}
         showVerticalScrollIndicator={showVerticalScrollIndicator}
         enrichedEventsByDate={enrichedEventsByDate}
