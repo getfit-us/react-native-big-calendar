@@ -9,11 +9,11 @@ import { DAY_MINUTES, getRelativeTopInDay, getStyleForOverlappingEvent } from '.
 import { typedMemo } from '../utils/react'
 import { DefaultCalendarEventRenderer } from './DefaultCalendarEventRenderer'
 
-const getEventCellPositionStyle = (start: Date, end: Date) => {
+const getEventCellPositionStyle = (start: Date | string, end: Date | string) => {
   const relativeHeight = 100 * (1 / DAY_MINUTES) * dayjs(end).diff(start, 'minute')
   const relativeTop = getRelativeTopInDay(dayjs(start))
   return {
-    height: `${relativeHeight}%`,
+    height: `${relativeHeight - 0.15}%`,
     top: `${relativeTop}%`,
   }
 }
