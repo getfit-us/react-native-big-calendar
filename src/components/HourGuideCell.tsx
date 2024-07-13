@@ -15,6 +15,7 @@ interface HourGuideCellProps {
   minute: number
   index: number
   calendarCellStyle?: CalendarCellStyle
+  onPressElement?: React.ReactNode
 }
 
 const _HourGuideCell = ({
@@ -22,23 +23,36 @@ const _HourGuideCell = ({
   onLongPress,
   onPress,
   date,
-
   hour,
   minute,
   index,
   calendarCellStyle,
+  onPressElement,
 }: HourGuideCellProps) => {
   const theme = useTheme()
-
+  const [showElement, setShowElement] = React.useState(false)
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
   const getCalendarCellStyle = React.useMemo(
     () => (typeof calendarCellStyle === 'function' ? calendarCellStyle : () => calendarCellStyle),
     [calendarCellStyle],
   )
 
+  const handlePress = React.useCallback(() => {
+    setShowElement(true)
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    onPress(date.hour(hour).minute(minute))
+    timeoutRef.current = setTimeout(() => {
+      setShowElement(false)
+    }, 800)
+  }, [timeoutRef, setShowElement, onPress, date, hour, minute])
+
   return (
     <TouchableWithoutFeedback
       onLongPress={() => onLongPress(date.hour(hour).minute(minute))}
-      onPress={() => onPress(date.hour(hour).minute(minute))}
+      onPress={handlePress}
     >
       <View
         style={[
@@ -48,7 +62,9 @@ const _HourGuideCell = ({
           { height: cellHeight },
           { ...getCalendarCellStyle(date.toDate(), index) },
         ]}
-      />
+      >
+        {showElement && onPressElement}
+      </View>
     </TouchableWithoutFeedback>
   )
 }

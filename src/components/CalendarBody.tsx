@@ -43,6 +43,7 @@ interface CalendarBodyProps<T extends ICalendarEventBase> {
   dateRange: dayjs.Dayjs[]
   events: T[]
   scrollOffsetMinutes: number
+  scrollViewRef?: React.RefObject<ScrollView>
   ampm: boolean
   showTime: boolean
   style: ViewStyle
@@ -52,9 +53,11 @@ interface CalendarBodyProps<T extends ICalendarEventBase> {
   overlapOffset?: number
   onLongPressCell?: (date: Date) => void
   onPressCell?: (date: Date) => void
+  selectedCell?: Date
   onPressEvent?: (event: T) => void
   onSwipeHorizontal?: (d: HorizontalDirection) => void
   renderEvent?: EventRenderer<T>
+  onPressElement?: React.ReactNode
   headerComponent?: React.ReactElement | null
   headerComponentStyle?: ViewStyle
   hourStyle?: TextStyle
@@ -82,10 +85,12 @@ function _CalendarBody<T extends ICalendarEventBase>({
   ampm,
   showTime,
   scrollOffsetMinutes,
+  scrollViewRef,
   onSwipeHorizontal,
   hideNowIndicator,
   overlapOffset,
   renderEvent,
+  onPressElement,
   headerComponent = null,
   headerComponentStyle = {},
   hourStyle = {},
@@ -123,7 +128,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
         clearTimeout(timeout)
       }
     }
-  }, [scrollView, scrollOffsetMinutes, cellHeight])
+  }, [scrollView, scrollOffsetMinutes, cellHeight, scrollViewRef])
 
   const panResponder = usePanResponder({
     onSwipeHorizontal,
@@ -247,15 +252,17 @@ function _CalendarBody<T extends ICalendarEventBase>({
       <ScrollView
         style={[
           {
-            height: containerHeight - cellHeight * 3,
+            height: containerHeight,
           },
           style,
         ]}
-        ref={scrollView}
+        ref={scrollViewRef ? scrollViewRef : scrollView}
         scrollEventThrottle={32}
         {...(Platform.OS !== 'web' ? panResponder.panHandlers : {})}
         showsVerticalScrollIndicator={showVerticalScrollIndicator}
         nestedScrollEnabled
+        bounces={false}
+        overScrollMode="never" // Disable over-scroll for Android
         contentOffset={Platform.OS === 'ios' ? { x: 0, y: scrollOffsetMinutes } : { x: 0, y: 0 }}
       >
         <View
@@ -264,7 +271,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
         >
           {(!hideHours || showWeekNumber) && (
             <View style={[u['z-20'], u['w-50']]}>
-              {getHours(minuteStep).map((time) => (
+              {getHours(minuteStep).map((time, index) => (
                 <HourGuideColumn
                   key={time.hour + time.minute}
                   cellHeight={cellHeight}
@@ -272,6 +279,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
                   minute={time.minute}
                   ampm={ampm}
                   hourStyle={hourStyle}
+                  index={index}
                 />
               ))}
             </View>
@@ -290,6 +298,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
                   onPress={_onPressCell}
                   index={index}
                   calendarCellStyle={calendarCellStyle}
+                  onPressElement={onPressElement}
                 />
               ))}
               {_renderEvents(date)}
@@ -298,6 +307,9 @@ function _CalendarBody<T extends ICalendarEventBase>({
                   style={[
                     styles.nowIndicator,
                     { backgroundColor: theme.palette.nowIndicator },
+                    {
+                      height: 3,
+                    },
                     { top: `${getRelativeTopInDay(now)}%` },
                   ]}
                 />

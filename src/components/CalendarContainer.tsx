@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { TextStyle, ViewStyle } from 'react-native'
+import { ScrollView, TextStyle, ViewStyle } from 'react-native'
 
 import { MIN_HEIGHT } from '../commonStyles'
 import {
@@ -92,6 +92,7 @@ export interface CalendarContainerProps<T extends ICalendarEventBase> {
   showAdjacentMonths?: boolean
   mode?: Mode
   scrollOffsetMinutes?: number
+  scrollViewRef?: React.RefObject<ScrollView>
   showTime?: boolean
 
   swipeEnabled?: boolean
@@ -101,6 +102,7 @@ export interface CalendarContainerProps<T extends ICalendarEventBase> {
   onPressCell?: (date: Date) => void
   onPressDateHeader?: (date: Date) => void
   onPressEvent?: (event: T) => void
+  onPressElement?: React.ReactNode
   weekEndsOn?: WeekNum
   maxVisibleEventCount?: number
   eventMinHeightForMonthView?: number
@@ -159,6 +161,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   mode = 'week',
   overlapOffset,
   scrollOffsetMinutes = 0,
+  scrollViewRef,
   showTime = true,
   headerContainerStyle = {},
   headerContentStyle = {},
@@ -173,6 +176,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   onPressCell,
   onPressDateHeader,
   onPressEvent,
+  onPressElement,
   renderEvent,
   renderHeader: HeaderComponent = CalendarHeader,
   renderHeaderForMonthView: HeaderComponentForMonthView = CalendarHeaderForMonthView,
@@ -202,7 +206,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   eventsAreSorted = false,
   onSwipeEnd,
 }: CalendarContainerProps<T>) {
-  // To ensure we have proper effect callback, use string to date comparision.
+  // To ensure we have proper effect callback, use string to date comparisons.
   const dateString = date?.toString()
 
   const [targetDate, setTargetDate] = React.useState(() => dayjs(date))
@@ -394,11 +398,13 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         hideNowIndicator={hideNowIndicator}
         overlapOffset={overlapOffset}
         scrollOffsetMinutes={scrollOffsetMinutes}
+        scrollViewRef={scrollViewRef}
         ampm={ampm}
         showTime={showTime}
         onLongPressCell={onLongPressCell}
         onPressCell={onPressCell}
         onPressEvent={onPressEvent}
+        onPressElement={onPressElement}
         onSwipeHorizontal={onSwipeHorizontal}
         renderEvent={renderEvent}
         headerComponent={headerComponent}

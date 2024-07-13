@@ -5,8 +5,8 @@ import { CalendarHeaderProps } from './components/CalendarHeader'
 import { CalendarHeaderForMonthViewProps } from './components/CalendarHeaderForMonthView'
 
 export interface ICalendarEventBase {
-  start: Date
-  end: Date
+  start: Date | string
+  end: Date | string
   title: string
   children?: ReactElement | null
   hideHours?: boolean

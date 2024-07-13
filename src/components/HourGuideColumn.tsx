@@ -12,6 +12,7 @@ interface HourGuideColumnProps {
   minute: number
   ampm: boolean
   hourStyle: TextStyle
+  index: number
 }
 
 const _HourGuideColumn = ({
@@ -19,25 +20,63 @@ const _HourGuideColumn = ({
   hour,
   minute,
   ampm,
+  index,
   hourStyle = {},
 }: HourGuideColumnProps) => {
   const theme = useTheme()
   const textStyle = React.useMemo(
-    () => ({ color: theme.palette.gray[500], fontSize: theme.typography.xs.fontSize }),
+    () =>
+      ({
+        color: theme.palette.gray[500],
+        fontSize: theme.typography.xs.fontSize,
+      }) as const,
     [theme],
   )
+  const viewStyle = React.useMemo(
+    () =>
+      ({
+        height: cellHeight,
+        // borderWidth: 1,
+        // borderColor: theme.palette.gray[200],
+        // borderLeftWidth: 0,
+        // borderTopWidth: 0,
+        // borderRightWidth: 0,
+        // justifyContent: 'flex-start',
+        justifyContent: 'center',
 
-  return (
-    <View style={{ height: cellHeight }}>
-      <Text style={[objHasContent(hourStyle) ? hourStyle : textStyle, u['text-center']]}>
-        {formatHour(
-          {
-            hour,
-            minute,
+        position: 'relative',
+      }) as const,
+    [cellHeight],
+  )
+
+  const viewStyleChild: any = React.useMemo(
+    () =>
+      index > 0
+        ? {
+            position: 'absolute' as 'absolute',
+            top: -8,
+            left: 2,
+          }
+        : {
+            position: 'absolute' as 'absolute',
+            top: 0,
+            left: 2,
           },
-          ampm,
-        )}
-      </Text>
+    [index],
+  )
+  return (
+    <View style={viewStyle}>
+      <View style={viewStyleChild}>
+        <Text style={[objHasContent(hourStyle) ? hourStyle : textStyle, u['text-center']]}>
+          {formatHour(
+            {
+              hour,
+              minute,
+            },
+            ampm,
+          )}
+        </Text>
+      </View>
     </View>
   )
 }

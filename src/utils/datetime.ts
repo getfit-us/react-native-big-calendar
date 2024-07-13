@@ -76,15 +76,15 @@ export function formatHour(time: { hour: number; minute: number }, ampm = false)
 
   if (ampm) {
     if (hour === 0) {
-      return `12:${minute.toString().padStart(2, '0')} AM`
+      return `12:${minute.toString().padStart(2, '0')}`
     }
     if (hour === 12) {
-      return `12:${minute.toString().padStart(2, '0')} PM`
+      return `12:${minute.toString().padStart(2, '0')}`
     }
     if (hour > 12) {
-      return `${hour - 12}:${minute.toString().padStart(2, '0')} PM`
+      return `${hour - 12}:${minute.toString().padStart(2, '0')}`
     }
-    return `${hour}:${minute.toString().padStart(2, '0')} AM`
+    return `${hour}:${minute.toString().padStart(2, '0')}`
   }
   return `${hour}:${minute.toString().padStart(2, '0')}`
 }
@@ -130,7 +130,7 @@ export function formatStartEnd(start: Date, end: Date, format: string) {
   return `${dayjs(start).format(format)} - ${dayjs(end).format(format)}`
 }
 
-export function isAllDayEvent(start: Date, end: Date) {
+export function isAllDayEvent(start: Date | string, end: Date | string) {
   const _start = dayjs(start)
   const _end = dayjs(end)
 
@@ -187,7 +187,7 @@ export function enrichEvents<T extends ICalendarEventBase>(
   // If events are not sorted, sort them by start time
   const baseEvents = eventsAreSorted
     ? events
-    : events.sort((a, b) => a.start.getTime() - b.start.getTime())
+    : events.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
 
   const eventsWithOverlaps = baseEvents.map((event, index) => {
     // If the event starts before the group end time, it overlaps
