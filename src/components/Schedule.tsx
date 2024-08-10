@@ -150,7 +150,7 @@ function _Schedule<T extends ICalendarEventBase>({
                   u['mt-6'],
               ]}
             >
-              {date.format('D')}
+              {date.format('M/D')}
             </Text>
             <Text
               style={[

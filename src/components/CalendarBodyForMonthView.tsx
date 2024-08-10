@@ -141,7 +141,7 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
               const bDuration = dayjs.duration(dayjs(b.end).diff(dayjs(b.start))).days()
               return aDuration - bDuration
             }
-            return b.start.getTime() - a.start.getTime()
+            return dayjs(b.start).toDate()?.getTime() - dayjs(a.start).toDate()?.getTime()
           })
 
         /**
